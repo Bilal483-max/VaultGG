@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Favorites - VaultGG</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family:
+                Inter,
+                Arial,
+                sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at 10% 0%,
+                    rgba(124,92,255,0.15),
+                    transparent 30%
+                ),
+                #07090f;
+
+            color: #f4f7fb;
+
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .navbar {
+            height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 35px;
+
+            border-bottom: 1px solid
+                rgba(255,255,255,0.08);
+
+            background: rgba(7,9,15,0.85);
+
+            backdrop-filter: blur(18px);
+
+            position: sticky;
+            top: 0;
+
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        .logo span {
+            color: #7c5cff;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav a {
+            color: #8b95a7;
+            font-size: 13px;
+        }
+
+        .nav a:hover {
+            color: white;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c5cff,
+                    #00e5ff
+                );
+
+            font-weight: 800;
+        }
+
+        .container {
+            width: min(
+                1150px,
+                calc(100% - 32px)
+            );
+
+            margin: auto;
+
+            padding: 45px 0;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #8b95a7;
+            font-size: 14px;
+        }
+
+        .back {
+            display: inline-block;
+
+            margin-bottom: 20px;
+
+            color: #7c5cff;
+
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 18px;
+        }
+
+        .card {
+            background:
+                rgba(13,17,26,0.92);
+
+            border: 1px solid
+                rgba(255,255,255,0.08);
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+
+            border-color:
+                rgba(124,92,255,0.3);
+        }
+
+        .image {
+            height: 155px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 45px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(124,92,255,0.2),
+                    rgba(0,229,255,0.08)
+                );
+        }
+
+        .content {
+            padding: 18px;
+        }
+
+        .game {
+            color: #7c5cff;
+
+            font-size: 10px;
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            margin-bottom: 7px;
+        }
+
+        .title {
+            font-size: 15px;
+            font-weight: 800;
+
+            margin-bottom: 8px;
+        }
+
+        .seller {
+            color: #8b95a7;
+            font-size: 11px;
+
+            margin-bottom: 16px;
+        }
+
+        .bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .price {
+            font-size: 14px;
+            font-weight: 850;
+        }
+
+        .view {
+            padding: 8px 11px;
+
+            border-radius: 8px;
+
+            background:
+                rgba(124,92,255,0.1);
+
+            color: #a996ff;
+
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .empty {
+            padding: 80px 20px;
+
+            text-align: center;
+
+            background:
+                rgba(13,17,26,0.8);
+
+            border: 1px solid
+                rgba(255,255,255,0.08);
+
+            border-radius: 16px;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .empty h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .empty p {
+            color: #8b95a7;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .browse {
+            display: inline-block;
+
+            padding: 11px 18px;
+
+            border-radius: 9px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c5cff,
+                    #5b42d9
+                );
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .flash {
+            padding: 12px 15px;
+
+            margin-bottom: 20px;
+
+            border-radius: 9px;
+
+            background:
+                rgba(124,92,255,0.08);
+
+            border: 1px solid
+                rgba(124,92,255,0.15);
+
+            color: #c8c0ff;
+
+            font-size: 13px;
+        }
+
+        @media (max-width: 850px) {
+
+            .grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 560px) {
+
+            .navbar {
+                padding: 0 18px;
+            }
+
+            .nav a {
+                display: none;
+            }
+
+            .container {
+                padding-top: 30px;
+            }
+
+            .header h1 {
+                font-size: 27px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <a
+        href="{{ url_for('home') }}"
+        class="logo"
+    >
+        Vault<span>GG</span>
+    </a>
+
+
+    <div class="nav">
+
+        <a
+            href="{{ url_for('marketplace.marketplace') }}"
+        >
+            Marketplace
+        </a>
+
+        <a
+            href="{{ url_for('dashboard.dashboard') }}"
+        >
+            Dashboard
+        </a>
+
+        <div class="avatar">
+            {{ user.username[0]|upper }}
+        </div>
+
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+
+    <a
+        href="{{ url_for('dashboard.dashboard') }}"
+        class="back"
+    >
+        ← Back to Dashboard
+    </a>
+
+
+    <div class="header">
+
+        <h1>
+            ❤️ Favorites
+        </h1>
+
+        <p>
+            Listings you've saved for later.
+        </p>
+
+    </div>
+
+
+    {% with messages = get_flashed_messages(
+        with_categories=true
+    ) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="flash">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    {% if favorites %}
+
+        <div class="grid">
+
+            {% for favorite in favorites %}
+
+                {% set listing = favorite.listing %}
+
+                <article class="card">
+
+                    <div class="image">
+                        🎮
+                    </div>
+
+
+                    <div class="content">
+
+                        <div class="game">
+                            {{ listing.game.name }}
+                        </div>
+
+                        <div class="title">
+                            {{ listing.title }}
+                        </div>
+
+                        <div class="seller">
+                            Seller:
+                            {{ listing.seller.username }}
+                        </div>
+
+
+                        <div class="bottom">
+
+                            <div class="price">
+                                {{ listing.currency }}
+                                {{ listing.price }}
+                            </div>
+
+                            <a
+                                href="{{ url_for(
+                                    'listings.listing_detail',
+                                    listing_id=listing.id
+                                ) }}"
+                                class="view"
+                            >
+                                View Listing
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                ❤️
+            </div>
+
+            <h2>
+                No favorites yet
+            </h2>
+
+            <p>
+                Save gaming accounts you're
+                interested in and find them here.
+            </p>
+
+            <a
+                href="{{ url_for(
+                    'marketplace.marketplace'
+                ) }}"
+                class="browse"
+            >
+                Browse Marketplace
+            </a>
+
+        </div>
+
+    {% endif %}
+
+
+</main>
+
+
+</body>
+
+</html>

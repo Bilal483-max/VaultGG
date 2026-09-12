@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Marketplace - VaultGG</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at 10% 0%,
+                    rgba(124,92,255,0.14),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 20%,
+                    rgba(0,229,255,0.07),
+                    transparent 25%
+                ),
+                #07090f;
+
+            color: #f4f7fb;
+
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+
+        /* NAVBAR */
+
+        .navbar {
+            height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 35px;
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.08);
+
+            background:
+                rgba(7,9,15,0.85);
+
+            backdrop-filter: blur(18px);
+
+            position: sticky;
+            top: 0;
+
+            z-index: 50;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: #7c5cff;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #8b95a7;
+            font-size: 13px;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        .login-btn {
+            padding: 9px 14px;
+
+            border:
+                1px solid rgba(124,92,255,0.3);
+
+            border-radius: 9px;
+
+            color: white;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .signup-btn {
+            padding: 10px 15px;
+
+            border-radius: 9px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c5cff,
+                    #5b42d9
+                );
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c5cff,
+                    #00e5ff
+                );
+
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+
+        /* MAIN */
+
+        .container {
+            width: min(
+                1200px,
+                calc(100% - 32px)
+            );
+
+            margin: auto;
+
+            padding: 42px 0 70px;
+        }
+
+        .top {
+            margin-bottom: 28px;
+        }
+
+        .top h1 {
+            font-size: 34px;
+
+            letter-spacing: -1px;
+
+            margin-bottom: 8px;
+        }
+
+        .top p {
+            color: #8b95a7;
+
+            font-size: 14px;
+        }
+
+
+        /* SEARCH */
+
+        .search-area {
+            display: flex;
+
+            gap: 12px;
+
+            margin-bottom: 22px;
+        }
+
+        .search {
+            flex: 1;
+
+            position: relative;
+        }
+
+        .search input {
+            width: 100%;
+
+            height: 48px;
+
+            padding: 0 17px;
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            border-radius: 11px;
+
+            outline: none;
+
+            background:
+                rgba(13,17,26,0.9);
+
+            color: white;
+
+            font-size: 13px;
+        }
+
+        .search input:focus {
+            border-color:
+                rgba(124,92,255,0.45);
+        }
+
+        .search input::placeholder {
+            color: #5e6879;
+        }
+
+
+        /* FILTERS */
+
+        .filters {
+            display: flex;
+
+            gap: 8px;
+
+            margin-bottom: 25px;
+
+            flex-wrap: wrap;
+        }
+
+        .filter {
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            background:
+                rgba(255,255,255,0.025);
+
+            color: #8b95a7;
+
+            padding: 9px 13px;
+
+            border-radius: 9px;
+
+            font-size: 11px;
+
+            cursor: pointer;
+        }
+
+        .filter.active,
+        .filter:hover {
+            color: white;
+
+            border-color:
+                rgba(124,92,255,0.3);
+
+            background:
+                rgba(124,92,255,0.1);
+        }
+
+
+        /* GRID */
+
+        .grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 18px;
+        }
+
+
+        /* CARD */
+
+        .card {
+            position: relative;
+
+            overflow: hidden;
+
+            background:
+                rgba(13,17,26,0.92);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            border-radius: 15px;
+
+            transition:
+                transform 0.2s,
+                border-color 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+
+            border-color:
+                rgba(124,92,255,0.3);
+        }
+
+
+        .card-image {
+            height: 180px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(124,92,255,0.18),
+                    rgba(0,229,255,0.06)
+                );
+
+            font-size: 55px;
+        }
+
+
+        /* FAVORITE BUTTON */
+
+        .favorite-form {
+            position: absolute;
+
+            top: 12px;
+            right: 12px;
+
+            z-index: 5;
+        }
+
+        .favorite-button {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border:
+                1px solid rgba(255,255,255,0.12);
+
+            border-radius: 50%;
+
+            background:
+                rgba(7,9,15,0.72);
+
+            backdrop-filter: blur(10px);
+
+            color: white;
+
+            font-size: 17px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .favorite-button:hover {
+            transform: scale(1.08);
+
+            border-color:
+                rgba(255,85,116,0.4);
+        }
+
+        .favorite-button.saved {
+            color: #ff5574;
+
+            background:
+                rgba(255,85,116,0.12);
+
+            border-color:
+                rgba(255,85,116,0.3);
+        }
+
+
+        /* CONTENT */
+
+        .card-content {
+            padding: 18px;
+        }
+
+        .game {
+            color: #7c5cff;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.7px;
+
+            margin-bottom: 8px;
+        }
+
+        .title {
+            font-size: 15px;
+
+            font-weight: 800;
+
+            margin-bottom: 7px;
+        }
+
+        .seller {
+            color: #8b95a7;
+
+            font-size: 11px;
+
+            margin-bottom: 17px;
+        }
+
+        .bottom {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+        .price {
+            font-size: 15px;
+
+            font-weight: 900;
+        }
+
+        .view {
+            padding: 9px 12px;
+
+            border-radius: 8px;
+
+            background:
+                rgba(124,92,255,0.1);
+
+            color: #b0a4ff;
+
+            font-size: 11px;
+
+            font-weight: 800;
+        }
+
+        .view:hover {
+            background:
+                rgba(124,92,255,0.18);
+        }
+
+
+        /* EMPTY */
+
+        .empty {
+            grid-column: 1 / -1;
+
+            padding: 80px 20px;
+
+            text-align: center;
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+
+            border-radius: 16px;
+
+            background:
+                rgba(13,17,26,0.8);
+        }
+
+        .empty-icon {
+            font-size: 45px;
+
+            margin-bottom: 15px;
+        }
+
+        .empty h2 {
+            font-size: 20px;
+
+            margin-bottom: 8px;
+        }
+
+        .empty p {
+            color: #8b95a7;
+
+            font-size: 13px;
+        }
+
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+
+            .grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 0 18px;
+            }
+
+            .nav-link {
+                display: none;
+            }
+
+            .container {
+                padding-top: 30px;
+            }
+
+            .top h1 {
+                font-size: 28px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-area {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <a
+        href="{{ url_for('home') }}"
+        class="logo"
+    >
+        Vault<span>GG</span>
+    </a>
+
+
+    <div class="nav">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="nav-link"
+        >
+            Home
+        </a>
+
+        <a
+            href="{{ url_for('marketplace.marketplace') }}"
+            class="nav-link"
+        >
+            Marketplace
+        </a>
+
+
+        {% if logged_in %}
+
+            <a
+                href="{{ url_for('dashboard.dashboard') }}"
+                class="nav-link"
+            >
+                Dashboard
+            </a>
+
+            <div class="avatar">
+                {{ session.get("username", "U")[0]|upper }}
+            </div>
+
+        {% else %}
+
+            <a
+                href="{{ url_for('auth.login') }}"
+                class="login-btn"
+            >
+                Log In
+            </a>
+
+            <a
+                href="{{ url_for('auth.register') }}"
+                class="signup-btn"
+            >
+                Create Account
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+<!-- MAIN -->
+
+<main class="container">
+
+
+    <div class="top">
+
+        <h1>
+            Gaming Account Marketplace
+        </h1>
+
+        <p>
+            Browse verified gaming accounts
+            from trusted sellers.
+        </p>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-area">
+
+        <div class="search">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search gaming accounts..."
+                autocomplete="off"
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- FILTERS -->
+
+    <div class="filters">
+
+        <button
+            class="filter active"
+            type="button"
+            data-filter="all"
+        >
+            All Games
+        </button>
+
+        <button
+            class="filter"
+            type="button"
+            data-filter="value"
+        >
+            Best Value
+        </button>
+
+        <button
+            class="filter"
+            type="button"
+            data-filter="newest"
+        >
+            Newest
+        </button>
+
+    </div>
+
+
+    <!-- LISTINGS -->
+
+    <div
+        class="grid"
+        id="listingGrid"
+    >
+
+        {% if listings %}
+
+            {% for listing in listings %}
+
+                <article
+                    class="card"
+                    data-title="{{ listing.title|lower }}"
+                    data-game="{{ listing.game.name|lower }}"
+                >
+
+
+                    <!-- FAVORITE -->
+
+                    {% if logged_in %}
+
+                        <form
+                            action="{{ url_for(
+                                'dashboard.add_favorite',
+                                listing_id=listing.id
+                            ) }}"
+                            method="POST"
+                            class="favorite-form"
+                        >
+
+                            <button
+                                type="submit"
+                                class="favorite-button
+                                {% if listing.id in favorite_ids %}
+                                    saved
+                                {% endif %}"
+                                title="
+                                {% if listing.id in favorite_ids %}
+                                    Remove from favorites
+                                {% else %}
+                                    Save to favorites
+                                {% endif %}
+                                "
+                            >
+
+                                {% if listing.id in favorite_ids %}
+                                    ♥
+                                {% else %}
+                                    ♡
+                                {% endif %}
+
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+
+                    <!-- IMAGE -->
+
+                    <div class="card-image">
+                        🎮
+                    </div>
+
+
+                    <!-- CONTENT -->
+
+                    <div class="card-content">
+
+                        <div class="game">
+                            {{ listing.game.name }}
+                        </div>
+
+                        <div class="title">
+                            {{ listing.title }}
+                        </div>
+
+                        <div class="seller">
+                            Seller:
+                            {{ listing.seller.username }}
+                        </div>
+
+
+                        <div class="bottom">
+
+                            <div class="price">
+
+                                {{ listing.currency }}
+                                {{ listing.price }}
+
+                            </div>
+
+
+                            <a
+                                href="{{ url_for(
+                                    'listings.listing_detail',
+                                    listing_id=listing.id
+                                ) }}"
+                                class="view"
+                            >
+                                View Listing
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🎮
+                </div>
+
+                <h2>
+                    No accounts available yet
+                </h2>
+
+                <p>
+                    Verified gaming accounts will
+                    appear here once sellers list them.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+</main>
+
+
+<script>
+
+    const searchInput =
+        document.getElementById("searchInput");
+
+    const cards =
+        document.querySelectorAll(".card");
+
+
+    searchInput.addEventListener(
+        "input",
+        function () {
+
+            const query =
+                this.value
+                .toLowerCase()
+                .trim();
+
+
+            cards.forEach(
+                function (card) {
+
+                    const title =
+                        card.dataset.title || "";
+
+                    const game =
+                        card.dataset.game || "";
+
+
+                    if (
+                        title.includes(query) ||
+                        game.includes(query)
+                    ) {
+
+                        card.style.display =
+                            "";
+
+                    } else {
+
+                        card.style.display =
+                            "none";
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+    const filters =
+        document.querySelectorAll(".filter");
+
+
+    filters.forEach(
+        function (filter) {
+
+            filter.addEventListener(
+                "click",
+                function () {
+
+                    filters.forEach(
+                        function (item) {
+                            item.classList.remove(
+                                "active"
+                            );
+                        }
+                    );
+
+                    this.classList.add(
+                        "active"
+                    );
+
+                }
+            );
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>

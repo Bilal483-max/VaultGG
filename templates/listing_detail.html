@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>{{ listing.title }} - VaultGG</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #07090f;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            height: 72px;
+            padding: 0 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            background: rgba(7,9,15,0.95);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: #7c5cff;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: #aeb4c4;
+            text-decoration: none;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        .container {
+            width: min(1150px, 90%);
+            margin: 0 auto;
+        }
+
+        .breadcrumbs {
+            padding-top: 30px;
+            color: #777f91;
+            font-size: 14px;
+        }
+
+        .breadcrumbs a {
+            color: #9c8aff;
+            text-decoration: none;
+        }
+
+        .page {
+            display: grid;
+            grid-template-columns: 1.4fr 0.9fr;
+            gap: 28px;
+            padding: 30px 0 80px;
+        }
+
+        .gallery {
+            min-height: 500px;
+            border: 1px solid #222836;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #0c1018;
+        }
+
+        .main-media {
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(124,92,255,0.25),
+                    transparent 55%
+                ),
+                #0a0d14;
+            color: #687083;
+            font-size: 18px;
+        }
+
+        .info {
+            border: 1px solid #222836;
+            border-radius: 20px;
+            padding: 28px;
+            background:
+                linear-gradient(
+                    145deg,
+                    #111520,
+                    #0b0e15
+                );
+            height: fit-content;
+        }
+
+        .game {
+            color: #8b73ff;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 32px;
+            line-height: 1.15;
+            margin-bottom: 15px;
+        }
+
+        .description {
+            color: #949cad;
+            line-height: 1.7;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+
+        .price-box {
+            border-top: 1px solid #252a38;
+            border-bottom: 1px solid #252a38;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        .price-label {
+            color: #747c8d;
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .price {
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .seller-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #252a38;
+            border-radius: 14px;
+            background: #0c1018;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #7c5cff;
+            font-weight: 800;
+        }
+
+        .seller-name {
+            font-weight: 700;
+        }
+
+        .seller-label {
+            color: #747c8d;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+
+        .verified {
+            color: #6ee7b7;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .buttons {
+            display: grid;
+            gap: 11px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .primary {
+            background: #7c5cff;
+            color: #ffffff;
+        }
+
+        .secondary {
+            background: #151a25;
+            border: 1px solid #292f3e;
+            color: #ffffff;
+        }
+
+        .security {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(70, 220, 160, 0.06);
+            border: 1px solid rgba(70, 220, 160, 0.15);
+        }
+
+        .security strong {
+            color: #6ee7b7;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .security p {
+            color: #8992a3;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 850px) {
+
+            .page {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery,
+            .main-media {
+                min-height: 350px;
+                height: 350px;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .nav-links {
+                display: none;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+
+            .info {
+                padding: 21px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        Vault<span>GG</span>
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/marketplace/">
+            Marketplace
+        </a>
+
+        <a href="/auth/login">
+            Login
+        </a>
+
+        <a href="/auth/register">
+            Create Account
+        </a>
+
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+    <div class="breadcrumbs">
+
+        <a href="/marketplace/">
+            Marketplace
+        </a>
+
+        &nbsp; / &nbsp;
+
+        {{ listing.game.name }}
+
+        &nbsp; / &nbsp;
+
+        {{ listing.title }}
+
+    </div>
+
+
+    <div class="page">
+
+
+        <!-- Listing media -->
+
+        <section class="gallery">
+
+            <div class="main-media">
+
+                Account Preview
+
+            </div>
+
+        </section>
+
+
+        <!-- Listing information -->
+
+        <section class="info">
+
+            <div class="game">
+
+                {{ listing.game.name }}
+
+            </div>
+
+
+            <h1>
+
+                {{ listing.title }}
+
+            </h1>
+
+
+            <p class="description">
+
+                {{ listing.description }}
+
+            </p>
+
+
+            <div class="price-box">
+
+                <div class="price-label">
+
+                    PRICE
+
+                </div>
+
+                <div class="price">
+
+                    {{ listing.currency }}
+
+                    {{ "{:,.2f}".format(
+                        listing.price|float
+                    ) }}
+
+                </div>
+
+            </div>
+
+
+            <div class="seller-box">
+
+                <div class="avatar">
+
+                    {{ listing.seller.username[0]|upper }}
+
+                </div>
+
+                <div>
+
+                    <div class="seller-label">
+
+                        SELLER
+
+                    </div>
+
+                    <div class="seller-name">
+
+                        {{ listing.seller.username }}
+
+                    </div>
+
+                    <div class="verified">
+
+                        ✓ VaultGG seller
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="buttons">
+
+                <a
+                    href="/auth/login"
+                    class="btn primary"
+                >
+                    Login to Buy
+                </a>
+
+                <a
+                    href="/auth/login"
+                    class="btn secondary"
+                >
+                    Contact Seller
+                </a>
+
+            </div>
+
+
+            <div class="security">
+
+                <strong>
+                    🛡 VaultGG Protection
+                </strong>
+
+                <p>
+                    Transactions will use VaultGG's
+                    protected order system. Never send
+                    payment directly to a seller.
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+</body>
+
+</html>

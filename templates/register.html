@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Create Account - VaultGG</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(96, 65, 255, 0.18),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at bottom right,
+                    rgba(0, 210, 255, 0.12),
+                    transparent 35%
+                ),
+                #070912;
+
+            color: #ffffff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px 16px;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .logo a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 30px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            background:
+                linear-gradient(
+                    90deg,
+                    #7c5cff,
+                    #00d9ff
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .card {
+            background: rgba(15, 18, 32, 0.88);
+
+            border: 1px solid rgba(
+                255,
+                255,
+                255,
+                0.08
+            );
+
+            border-radius: 22px;
+
+            padding: 34px;
+
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, 0.45);
+
+            backdrop-filter: blur(18px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #9298ad;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .flash-container {
+            margin-bottom: 20px;
+        }
+
+        .flash {
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .flash.error {
+            background: rgba(255, 70, 90, 0.12);
+            border: 1px solid rgba(255, 70, 90, 0.25);
+            color: #ff8998;
+        }
+
+        .flash.success {
+            background: rgba(0, 220, 150, 0.10);
+            border: 1px solid rgba(0, 220, 150, 0.22);
+            color: #62e9ba;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+
+            font-size: 13px;
+            font-weight: 700;
+            color: #dfe3f2;
+        }
+
+        input {
+            width: 100%;
+
+            background: #0b0f1d;
+
+            border: 1px solid #252b3f;
+
+            color: #ffffff;
+
+            padding: 13px 14px;
+
+            border-radius: 11px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition:
+                border-color 0.2s,
+                box-shadow 0.2s;
+        }
+
+        input:focus {
+            border-color: #7460ff;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(116, 96, 255, 0.12);
+        }
+
+        input::placeholder {
+            color: #626a80;
+        }
+
+        .verification-title {
+            margin-top: 8px;
+            margin-bottom: 12px;
+
+            color: #dfe3f2;
+
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .verification-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+
+            margin-bottom: 18px;
+        }
+
+        .verification-option {
+            position: relative;
+        }
+
+        .verification-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .verification-option label {
+            margin: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 54px;
+
+            border: 1px solid #252b3f;
+
+            border-radius: 11px;
+
+            background: #0b0f1d;
+
+            cursor: pointer;
+
+            color: #9298ad;
+
+            transition:
+                0.2s ease;
+        }
+
+        .verification-option label:hover {
+            border-color: #4d5570;
+            color: #ffffff;
+        }
+
+        .verification-option input:checked + label {
+            border-color: #7460ff;
+
+            background:
+                rgba(116, 96, 255, 0.12);
+
+            color: #ffffff;
+
+            box-shadow:
+                0 0 0 1px
+                rgba(116, 96, 255, 0.15);
+        }
+
+        .method-description {
+            margin-top: -5px;
+            margin-bottom: 18px;
+
+            color: #737b91;
+
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .phone-field {
+            display: none;
+        }
+
+        .phone-field.visible {
+            display: block;
+        }
+
+        .email-field.hidden {
+            display: none;
+        }
+
+        .button {
+            width: 100%;
+
+            border: none;
+
+            border-radius: 11px;
+
+            padding: 14px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #7057ff,
+                    #00cfff
+                );
+
+            color: #ffffff;
+
+            font-size: 15px;
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s;
+        }
+
+        .button:hover {
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 10px 30px
+                rgba(70, 110, 255, 0.25);
+        }
+
+        .terms {
+            margin-top: 18px;
+
+            text-align: center;
+
+            color: #666e84;
+
+            font-size: 11px;
+
+            line-height: 1.6;
+        }
+
+        .login {
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #7e869b;
+
+            font-size: 13px;
+        }
+
+        .login a {
+            color: #9b8cff;
+
+            text-decoration: none;
+
+            font-weight: 700;
+        }
+
+        .login a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 500px) {
+            .card {
+                padding: 25px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="logo">
+        <a href="/">
+            Vault<span>GG</span>
+        </a>
+    </div>
+
+    <div class="card">
+
+        <div class="header">
+            <h1>Create your account</h1>
+
+            <p>
+                Join VaultGG and start buying or selling
+                gaming accounts securely.
+            </p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="flash-container">
+
+                    {% for category, message in messages %}
+
+                        <div class="flash {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+        <form
+            method="POST"
+            action="{{ url_for('auth.register') }}"
+        >
+
+            <!-- USERNAME -->
+
+            <div class="field">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Choose a username"
+                    minlength="3"
+                    maxlength="50"
+                    autocomplete="username"
+                    required
+                >
+
+            </div>
+
+
+            <!-- VERIFICATION METHOD -->
+
+            <div class="verification-title">
+                Verify your account with
+            </div>
+
+            <div class="verification-options">
+
+                <div class="verification-option">
+
+                    <input
+                        type="radio"
+                        id="verify_email"
+                        name="verification_method"
+                        value="email"
+                        checked
+                    >
+
+                    <label for="verify_email">
+                        📧 Email
+                    </label>
+
+                </div>
+
+                <div class="verification-option">
+
+                    <input
+                        type="radio"
+                        id="verify_phone"
+                        name="verification_method"
+                        value="phone"
+                    >
+
+                    <label for="verify_phone">
+                        📱 Phone
+                    </label>
+
+                </div>
+
+            </div>
+
+            <div class="method-description" id="method_description">
+                We'll send a 6-digit verification code to your email.
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div
+                class="field email-field"
+                id="email_field"
+            >
+
+                <label for="email">
+                    Email address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    maxlength="255"
+                    autocomplete="email"
+                >
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div
+                class="field phone-field"
+                id="phone_field"
+            >
+
+                <label for="phone_number">
+                    Phone number
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone_number"
+                    name="phone_number"
+                    placeholder="+2348012345678"
+                    maxlength="30"
+                    autocomplete="tel"
+                >
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="field">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a strong password"
+                    minlength="8"
+                    maxlength="128"
+                    autocomplete="new-password"
+                    required
+                >
+
+            </div>
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="field">
+
+                <label for="confirm_password">
+                    Confirm password
+                </label>
+
+                <input
+                    type="password"
+                    id="confirm_password"
+                    name="confirm_password"
+                    placeholder="Enter your password again"
+                    minlength="8"
+                    maxlength="128"
+                    autocomplete="new-password"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="button"
+            >
+                Create VaultGG Account
+            </button>
+
+        </form>
+
+
+        <div class="terms">
+            By creating an account, you agree to VaultGG's
+            Terms of Service and Privacy Policy.
+        </div>
+
+        <div class="login">
+            Already have an account?
+            <a href="/auth/login">
+                Log in
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const emailOption =
+        document.getElementById("verify_email");
+
+    const phoneOption =
+        document.getElementById("verify_phone");
+
+    const emailField =
+        document.getElementById("email_field");
+
+    const phoneField =
+        document.getElementById("phone_field");
+
+    const emailInput =
+        document.getElementById("email");
+
+    const phoneInput =
+        document.getElementById("phone_number");
+
+    const methodDescription =
+        document.getElementById("method_description");
+
+
+    function updateVerificationMethod() {
+
+        if (phoneOption.checked) {
+
+            emailField.classList.add("hidden");
+
+            phoneField.classList.add("visible");
+
+            emailInput.required = false;
+
+            phoneInput.required = true;
+
+            methodDescription.textContent =
+                "We'll send a 6-digit verification code to your phone.";
+
+        } else {
+
+            emailField.classList.remove("hidden");
+
+            phoneField.classList.remove("visible");
+
+            emailInput.required = true;
+
+            phoneInput.required = false;
+
+            methodDescription.textContent =
+                "We'll send a 6-digit verification code to your email.";
+        }
+    }
+
+
+    emailOption.addEventListener(
+        "change",
+        updateVerificationMethod
+    );
+
+    phoneOption.addEventListener(
+        "change",
+        updateVerificationMethod
+    );
+
+
+    updateVerificationMethod();
+
+</script>
+
+</body>
+</html>

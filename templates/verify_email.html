@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Verify Account - VaultGG</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(96, 65, 255, 0.18),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at bottom right,
+                    rgba(0, 210, 255, 0.12),
+                    transparent 35%
+                ),
+                #070912;
+
+            color: #ffffff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px 16px;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .logo a {
+            color: #ffffff;
+            text-decoration: none;
+
+            font-size: 30px;
+            font-weight: 900;
+
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            background:
+                linear-gradient(
+                    90deg,
+                    #7c5cff,
+                    #00d9ff
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .card {
+            background:
+                rgba(15, 18, 32, 0.90);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+
+            border-radius: 22px;
+
+            padding: 34px;
+
+            box-shadow:
+                0 25px 80px
+                rgba(0, 0, 0, 0.45);
+
+            backdrop-filter: blur(18px);
+        }
+
+        .icon {
+            width: 70px;
+            height: 70px;
+
+            margin: 0 auto 22px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                rgba(116, 96, 255, 0.12);
+
+            border:
+                1px solid
+                rgba(116, 96, 255, 0.25);
+
+            font-size: 30px;
+        }
+
+        .header {
+            text-align: center;
+
+            margin-bottom: 28px;
+        }
+
+        .header h1 {
+            font-size: 27px;
+
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #9298ad;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+        .method {
+            color: #ffffff;
+
+            font-weight: 700;
+        }
+
+        .flash-container {
+            margin-bottom: 20px;
+        }
+
+        .flash {
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            margin-bottom: 10px;
+
+            font-size: 14px;
+
+            line-height: 1.4;
+        }
+
+        .flash.error {
+            background:
+                rgba(255, 70, 90, 0.12);
+
+            border:
+                1px solid
+                rgba(255, 70, 90, 0.25);
+
+            color: #ff8998;
+        }
+
+        .flash.success {
+            background:
+                rgba(0, 220, 150, 0.10);
+
+            border:
+                1px solid
+                rgba(0, 220, 150, 0.22);
+
+            color: #62e9ba;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+
+            margin-bottom: 9px;
+
+            color: #dfe3f2;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            text-align: center;
+        }
+
+        .otp-input {
+            width: 100%;
+
+            background: #0b0f1d;
+
+            border:
+                1px solid
+                #252b3f;
+
+            color: #ffffff;
+
+            padding: 17px 14px;
+
+            border-radius: 12px;
+
+            outline: none;
+
+            font-size: 27px;
+
+            font-weight: 800;
+
+            letter-spacing: 9px;
+
+            text-align: center;
+
+            transition:
+                border-color 0.2s,
+                box-shadow 0.2s;
+        }
+
+        .otp-input:focus {
+            border-color: #7460ff;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(116, 96, 255, 0.12);
+        }
+
+        .otp-input::placeholder {
+            color: #444b60;
+
+            letter-spacing: 7px;
+        }
+
+        .button {
+            width: 100%;
+
+            border: none;
+
+            border-radius: 11px;
+
+            padding: 14px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #7057ff,
+                    #00cfff
+                );
+
+            color: #ffffff;
+
+            font-size: 15px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s;
+        }
+
+        .button:hover {
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 10px 30px
+                rgba(70, 110, 255, 0.25);
+        }
+
+        .resend-section {
+            text-align: center;
+
+            margin-top: 22px;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid
+                rgba(255, 255, 255, 0.06);
+        }
+
+        .resend-section p {
+            color: #737b91;
+
+            font-size: 13px;
+
+            margin-bottom: 10px;
+        }
+
+        .resend-button {
+            background: transparent;
+
+            border: none;
+
+            color: #9b8cff;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .resend-button:hover {
+            text-decoration: underline;
+        }
+
+        .back {
+            text-align: center;
+
+            margin-top: 20px;
+        }
+
+        .back a {
+            color: #737b91;
+
+            font-size: 13px;
+
+            text-decoration: none;
+        }
+
+        .back a:hover {
+            color: #ffffff;
+        }
+
+        .security-note {
+            margin-top: 22px;
+
+            padding: 13px;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.05);
+
+            color: #656d82;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+
+            text-align: center;
+        }
+
+        @media (max-width: 500px) {
+
+            .card {
+                padding: 27px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .otp-input {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="logo">
+        <a href="/">
+            Vault<span>GG</span>
+        </a>
+    </div>
+
+
+    <div class="card">
+
+        <div class="icon">
+            {% if verification_method == "phone" %}
+                📱
+            {% else %}
+                📧
+            {% endif %}
+        </div>
+
+
+        <div class="header">
+
+            <h1>
+                Verify your account
+            </h1>
+
+            <p>
+
+                {% if verification_method == "phone" %}
+
+                    We sent a 6-digit verification code
+                    to your phone number.
+
+                {% else %}
+
+                    We sent a 6-digit verification code
+                    to your email address.
+
+                {% endif %}
+
+                <br>
+
+                Enter the code below to activate
+                your VaultGG account.
+
+            </p>
+
+        </div>
+
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="flash-container">
+
+                    {% for category, message in messages %}
+
+                        <div class="flash {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <form
+            method="POST"
+            action="{{ url_for('auth.verify') }}"
+        >
+
+            <div class="field">
+
+                <label for="otp">
+                    6-Digit Verification Code
+                </label>
+
+                <input
+                    class="otp-input"
+                    type="text"
+                    id="otp"
+                    name="otp"
+                    placeholder="000000"
+                    inputmode="numeric"
+                    autocomplete="one-time-code"
+                    maxlength="6"
+                    pattern="[0-9]{6}"
+                    required
+                    autofocus
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="button"
+            >
+                Verify Account
+            </button>
+
+        </form>
+
+
+        <div class="resend-section">
+
+            <p>
+                Didn't receive the code?
+            </p>
+
+            <form
+                method="POST"
+                action="{{ url_for('auth.resend_verification') }}"
+            >
+
+                <button
+                    type="submit"
+                    class="resend-button"
+                >
+                    Resend verification code
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <div class="back">
+
+            <a href="/auth/register">
+                ← Back to registration
+            </a>
+
+        </div>
+
+
+        <div class="security-note">
+
+            🔒 Your verification code is protected and
+            expires after 10 minutes. Never share your
+            verification code with anyone.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const otpInput =
+        document.getElementById("otp");
+
+
+    otpInput.addEventListener(
+        "input",
+        function () {
+
+            this.value =
+                this.value
+                    .replace(/\D/g, "")
+                    .slice(0, 6);
+
+        }
+    );
+
+</script>
+
+</body>
+</html>

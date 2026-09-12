@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Listing - VaultGG</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(108, 60, 255, 0.18), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(0, 220, 255, 0.10), transparent 35%),
+                #080a12;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .navbar {
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            background: rgba(8, 10, 18, 0.85);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(15px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: #8b5cf6;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .nav-link {
+            color: #c7c9d4;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+        }
+
+        .container {
+            width: min(950px, 92%);
+            margin: 45px auto 80px;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #9da2b5;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: rgba(18, 21, 34, 0.88);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 28px;
+            margin-bottom: 22px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.25);
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e8e9ef;
+            font-weight: 600;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #0e111c;
+            color: #ffffff;
+            padding: 13px 14px;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .help-text {
+            color: #858b9e;
+            font-size: 13px;
+            margin-top: 7px;
+            line-height: 1.5;
+        }
+
+        .security-box {
+            background: rgba(139,92,246,0.08);
+            border: 1px solid rgba(139,92,246,0.25);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 22px;
+            color: #cfd2df;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .security-box strong {
+            color: #ffffff;
+        }
+
+        .login-options {
+            display: none;
+        }
+
+        .login-options.active {
+            display: block;
+        }
+
+        .game-message {
+            padding: 13px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.04);
+            color: #9da2b5;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .submit-area {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 13px 22px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-secondary {
+            background: #1a1e2d;
+            color: #d8dae3;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .btn-secondary:hover {
+            background: #222739;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            color: #ffffff;
+            box-shadow: 0 8px 25px rgba(109,40,217,0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 30px rgba(109,40,217,0.45);
+        }
+
+        .required {
+            color: #ff6b81;
+        }
+
+        @media (max-width: 700px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 0 4%;
+            }
+
+            .nav-right {
+                gap: 10px;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .submit-area {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <a href="/" class="logo">
+        Vault<span>GG</span>
+    </a>
+
+    <div class="nav-right">
+        <a href="/marketplace/" class="nav-link">Marketplace</a>
+        <a href="/dashboard/" class="nav-link">Dashboard</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>Create Listing</h1>
+        <p>
+            Submit your gaming account for VaultGG verification.
+            Your listing will remain private until it has been reviewed and approved.
+        </p>
+    </div>
+
+    <form method="POST" action="/seller/create">
+
+        <!-- BASIC INFORMATION -->
+        <div class="card">
+
+            <h2>Basic Information</h2>
+
+            <div class="form-group">
+                <label for="game_id">
+                    Game <span class="required">*</span>
+                </label>
+
+                <select id="game_id" name="game_id" required>
+                    <option value="">Select a game</option>
+
+                    {% for game in games %}
+                        <option value="{{ game.id }}">
+                            {{ game.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <div class="help-text">
+                    Select the game this account belongs to.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="title">
+                    Listing Title <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    maxlength="200"
+                    placeholder="Example: High Level Blood Strike Account"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="description">
+                    Description <span class="required">*</span>
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Describe the account, its level, skins, weapons, items and anything important a buyer should know."
+                    required
+                ></textarea>
+            </div>
+
+        </div>
+
+
+        <!-- PRIVATE ACCOUNT VERIFICATION -->
+        <div class="card">
+
+            <h2>Private Account Verification</h2>
+
+            <div class="security-box">
+                <strong>🔐 Private verification information</strong><br>
+
+                These details are provided to VaultGG verification staff so they can
+                confirm that the account exists and matches your listing.
+
+                They should not be displayed publicly on the marketplace.
+            </div>
+
+            <div class="form-group">
+
+                <label for="login_method">
+                    Account Login Method <span class="required">*</span>
+                </label>
+
+                <select
+                    id="login_method"
+                    name="login_method"
+                    required
+                    disabled
+                >
+                    <option value="">
+                        Select a game first
+                    </option>
+                </select>
+
+                <div id="game-message" class="game-message">
+                    Select a game to see the supported login methods.
+                </div>
+
+            </div>
+
+
+            <!-- BLOOD STRIKE -->
+            <div
+                id="blood-strike-login"
+                class="login-options"
+            >
+
+                <div class="form-group">
+
+                    <label for="bloodstrike_identifier">
+                        Google / NetEase Account Identifier
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="bloodstrike_identifier"
+                        name="login_identifier"
+                        placeholder="Enter the email, username or account identifier"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- CALL OF DUTY -->
+            <div
+                id="call-of-duty-login"
+                class="login-options"
+            >
+
+                <div class="form-group">
+
+                    <label for="cod_identifier">
+                        Google / Activision Account Identifier
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="cod_identifier"
+                        name="login_identifier_cod"
+                        placeholder="Enter the email, username or account identifier"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="login_secret">
+                    Account Verification Secret
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="password"
+                    id="login_secret"
+                    name="login_secret"
+                    placeholder="Enter the password/verification secret"
+                    required
+                    autocomplete="new-password"
+                >
+
+                <div class="help-text">
+                    This information is stored privately and encrypted.
+                    It will not be shown on your public listing.
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="verification_notes">
+                    Verification Notes
+                </label>
+
+                <textarea
+                    id="verification_notes"
+                    name="verification_notes"
+                    placeholder="Add anything verification staff should know about the account."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRICING -->
+        <div class="card">
+
+            <h2>Pricing</h2>
+
+            <div class="row">
+
+                <div class="form-group">
+
+                    <label for="price">
+                        Price <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="price"
+                        name="price"
+                        min="0"
+                        step="0.01"
+                        placeholder="0.00"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="currency">
+                        Currency
+                    </label>
+
+                    <select id="currency" name="currency">
+
+                        <option value="NGN">
+                            NGN - Nigerian Naira
+                        </option>
+
+                        <option value="USD">
+                            USD - US Dollar
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+
+                    <input
+                        type="checkbox"
+                        name="negotiable"
+                        value="true"
+                        style="
+                            width: 18px;
+                            height: 18px;
+                            accent-color: #8b5cf6;
+                            cursor: pointer;
+                        "
+            >
+
+                    span>Negotiable</span>
+
+                </label>
+
+                <div class="help-text">
+                    Allow buyers to negotiate the listed price.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SUBMISSION -->
+        <div class="card">
+
+            <div class="security-box">
+
+                <strong>What happens after submission?</strong><br>
+
+                Your listing is created privately and sent for verification.
+                Verification staff will check the account and evidence before
+                the listing becomes visible to buyers.
+
+            </div>
+
+            <div class="submit-area">
+
+                <a
+                    href="/seller/"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Submit for Verification
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<script>
+
+    const gameSelect = document.getElementById("game_id");
+    const loginMethod = document.getElementById("login_method");
+    const gameMessage = document.getElementById("game-message");
+
+    const bloodStrikeBox = document.getElementById("blood-strike-login");
+    const callOfDutyBox = document.getElementById("call-of-duty-login");
+
+    const bloodStrikeIdentifier =
+        document.getElementById("bloodstrike_identifier");
+
+    const callOfDutyIdentifier =
+        document.getElementById("cod_identifier");
+
+
+    /*
+        Login methods supported by each game.
+
+        Free Fire is intentionally left without methods
+        until its supported login system is confirmed.
+    */
+
+    const gameLoginMethods = {
+
+        "blood-strike": [
+            {
+                value: "google",
+                label: "Google Account + Password"
+            },
+            {
+                value: "netease",
+                label: "NetEase Games Account + Password"
+            }
+        ],
+
+        "call-of-duty": [
+            {
+                value: "google",
+                label: "Google Account + Password"
+            },
+            {
+                value: "activision",
+                label: "Activision Account + Password"
+            }
+        ],
+
+        "free-fire": []
+
+    };
+
+
+    function normalizeGameName(name) {
+
+        return name
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, "-");
+
+    }
+
+
+    function updateLoginMethods() {
+
+        const selectedOption =
+            gameSelect.options[gameSelect.selectedIndex];
+
+        loginMethod.innerHTML = "";
+
+        bloodStrikeBox.classList.remove("active");
+        callOfDutyBox.classList.remove("active");
+
+        bloodStrikeIdentifier.required = false;
+        callOfDutyIdentifier.required = false;
+
+        if (!selectedOption || !selectedOption.value) {
+
+            loginMethod.disabled = true;
+
+            const option = document.createElement("option");
+            option.value = "";
+            option.textContent = "Select a game first";
+
+            loginMethod.appendChild(option);
+
+            gameMessage.textContent =
+                "Select a game to see the supported login methods.";
+
+            return;
+        }
+
+
+        loginMethod.disabled = false;
+
+        const gameSlug =
+            normalizeGameName(selectedOption.textContent);
+
+
+        const methods =
+            gameLoginMethods[gameSlug] || [];
+
+
+        if (methods.length === 0) {
+
+            const option = document.createElement("option");
+
+            option.value = "";
+            option.textContent =
+                "Login method not configured yet";
+
+            loginMethod.appendChild(option);
+
+            loginMethod.disabled = true;
+
+            gameMessage.textContent =
+                "Login methods for this game have not been configured yet.";
+
+            return;
+        }
+
+
+        const firstOption = document.createElement("option");
+
+        firstOption.value = "";
+        firstOption.textContent =
+            "Select login method";
+
+        loginMethod.appendChild(firstOption);
+
+
+        methods.forEach(method => {
+
+            const option =
+                document.createElement("option");
+
+            option.value = method.value;
+            option.textContent = method.label;
+
+            loginMethod.appendChild(option);
+
+        });
+
+
+        gameMessage.textContent =
+            "Choose the login method used by this account.";
+
+
+        if (gameSlug === "blood-strike") {
+
+            bloodStrikeBox.classList.add("active");
+
+            bloodStrikeIdentifier.required = true;
+
+        }
+
+
+        if (gameSlug === "call-of-duty") {
+
+            callOfDutyBox.classList.add("active");
+
+            callOfDutyIdentifier.required = true;
+
+        }
+
+    }
+
+
+    gameSelect.addEventListener(
+        "change",
+        updateLoginMethods
+    );
+
+
+    updateLoginMethods();
+
+</script>
+
+</body>
+</html>

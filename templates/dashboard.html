@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dashboard - VaultGG</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #07090f;
+            --panel: #0d111a;
+            --panel-light: #111722;
+            --border: rgba(255,255,255,0.08);
+            --text: #f4f7fb;
+            --muted: #8b95a7;
+            --accent: #7c5cff;
+            --accent-2: #00e5ff;
+            --success: #35e38a;
+            --danger: #ff5574;
+        }
+
+        body {
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at 10% 0%,
+                    rgba(124,92,255,0.16),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 10%,
+                    rgba(0,229,255,0.08),
+                    transparent 25%
+                ),
+                var(--bg);
+
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 35px;
+
+            border-bottom: 1px solid var(--border);
+
+            background: rgba(7,9,15,0.82);
+
+            backdrop-filter: blur(18px);
+
+            position: sticky;
+            top: 0;
+
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-link {
+            color: var(--muted);
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            padding: 8px 13px;
+
+            border: 1px solid var(--border);
+            border-radius: 30px;
+
+            background: rgba(255,255,255,0.03);
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--accent),
+                    var(--accent-2)
+                );
+
+            color: white;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .username {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* LAYOUT */
+
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 72px);
+        }
+
+        .sidebar {
+            width: 245px;
+
+            border-right: 1px solid var(--border);
+
+            padding: 28px 18px;
+
+            background: rgba(8,11,18,0.72);
+        }
+
+        .side-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+
+            color: #586274;
+
+            margin: 10px 12px 12px;
+        }
+
+        .side-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 12px 13px;
+
+            margin-bottom: 5px;
+
+            border-radius: 10px;
+
+            color: var(--muted);
+
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+        .side-link:hover {
+            background: rgba(124,92,255,0.09);
+            color: white;
+        }
+
+        .side-link.active {
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(124,92,255,0.18),
+                    rgba(124,92,255,0.05)
+                );
+
+            color: white;
+
+            border: 1px solid rgba(124,92,255,0.16);
+        }
+
+        .side-icon {
+            width: 24px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .main {
+            flex: 1;
+            padding: 38px;
+            max-width: 1400px;
+        }
+
+        /* HEADER */
+
+        .welcome {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .welcome p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            margin-top: 14px;
+
+            padding: 7px 12px;
+
+            border-radius: 20px;
+
+            background: rgba(53,227,138,0.08);
+
+            border: 1px solid rgba(53,227,138,0.18);
+
+            color: var(--success);
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .create-btn {
+            padding: 12px 18px;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--accent),
+                    #5b42d9
+                );
+
+            color: white;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            box-shadow:
+                0 8px 25px rgba(124,92,255,0.2);
+
+            transition: 0.2s;
+        }
+
+        .create-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* STATS */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 16px;
+
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(17,23,34,0.95),
+                    rgba(10,14,22,0.95)
+                );
+
+            border: 1px solid var(--border);
+
+            border-radius: 15px;
+
+            padding: 21px;
+
+            transition: 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+
+            border-color:
+                rgba(124,92,255,0.25);
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 14px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .stat-icon {
+            width: 32px;
+            height: 32px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 9px;
+
+            background: rgba(124,92,255,0.1);
+
+            font-size: 15px;
+        }
+
+        .stat-value {
+            font-size: 25px;
+            font-weight: 850;
+        }
+
+        /* CONTENT GRID */
+
+        .content-grid {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.8fr)
+                minmax(280px, 1fr);
+
+            gap: 20px;
+        }
+
+        .panel {
+            background:
+                rgba(13,17,26,0.9);
+
+            border: 1px solid var(--border);
+
+            border-radius: 16px;
+
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-header h2 {
+            font-size: 16px;
+        }
+
+        .view-all {
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* LISTINGS */
+
+        .listing-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            padding: 17px 20px;
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .listing-row:last-child {
+            border-bottom: none;
+        }
+
+        .listing-icon {
+            width: 45px;
+            height: 45px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(124,92,255,0.2),
+                    rgba(0,229,255,0.08)
+                );
+
+            font-size: 20px;
+        }
+
+        .listing-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .listing-title {
+            font-size: 14px;
+            font-weight: 700;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            margin-bottom: 5px;
+        }
+
+        .listing-meta {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .listing-price {
+            font-size: 13px;
+            font-weight: 800;
+            margin-right: 12px;
+        }
+
+        .status {
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 10px;
+            font-weight: 800;
+
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            color: var(--success);
+            background: rgba(53,227,138,0.08);
+        }
+
+        .status-draft {
+            color: #f4c95d;
+            background: rgba(244,201,93,0.08);
+        }
+
+        .status-sold {
+            color: #8fa3ff;
+            background: rgba(143,163,255,0.08);
+        }
+
+        .status-pending {
+            color: #ffb35c;
+            background: rgba(255,179,92,0.08);
+        }
+
+        .empty {
+            padding: 55px 25px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 35px;
+            margin-bottom: 13px;
+        }
+
+        .empty h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .empty p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .empty-btn {
+            display: inline-block;
+
+            padding: 10px 15px;
+
+            border-radius: 9px;
+
+            border: 1px solid var(--border);
+
+            color: white;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* RIGHT SIDE */
+
+        .profile-card {
+            padding: 25px;
+        }
+
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--accent),
+                    var(--accent-2)
+                );
+
+            font-size: 25px;
+            font-weight: 900;
+
+            margin-bottom: 15px;
+        }
+
+        .profile-card h3 {
+            font-size: 19px;
+            margin-bottom: 5px;
+        }
+
+        .profile-card p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .profile-status {
+            margin-top: 18px;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            background: rgba(53,227,138,0.06);
+
+            border: 1px solid rgba(53,227,138,0.12);
+        }
+
+        .profile-status strong {
+            display: block;
+
+            color: var(--success);
+
+            font-size: 12px;
+
+            margin-bottom: 4px;
+        }
+
+        .profile-status span {
+            color: var(--muted);
+
+            font-size: 11px;
+        }
+
+        /* QUICK ACTIONS */
+
+        .quick-actions {
+            padding: 18px;
+        }
+
+        .quick-action {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 13px;
+
+            border-radius: 10px;
+
+            margin-bottom: 6px;
+
+            transition: 0.2s;
+        }
+
+        .quick-action:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .quick-icon {
+            width: 34px;
+            height: 34px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 9px;
+
+            background: rgba(124,92,255,0.08);
+        }
+
+        .quick-text strong {
+            display: block;
+
+            font-size: 12px;
+
+            margin-bottom: 3px;
+        }
+
+        .quick-text span {
+            color: var(--muted);
+
+            font-size: 10px;
+        }
+
+        /* FLASH */
+
+        .flash-container {
+            margin-bottom: 20px;
+        }
+
+        .flash {
+            padding: 12px 15px;
+
+            border-radius: 9px;
+
+            margin-bottom: 8px;
+
+            font-size: 13px;
+
+            border: 1px solid var(--border);
+        }
+
+        .flash.success {
+            background: rgba(53,227,138,0.08);
+            color: var(--success);
+        }
+
+        .flash.error {
+            background: rgba(255,85,116,0.08);
+            color: var(--danger);
+        }
+
+        /* MOBILE */
+
+        .mobile-menu {
+            display: none;
+        }
+
+        @media (max-width: 1050px) {
+
+            .sidebar {
+                width: 205px;
+            }
+
+            .main {
+                padding: 25px;
+            }
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+
+            .navbar {
+                padding: 0 18px;
+            }
+
+            .nav-link {
+                display: none;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                padding: 22px 16px;
+            }
+
+            .welcome {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .welcome h1 {
+                font-size: 26px;
+            }
+
+            .create-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .stat-value {
+                font-size: 21px;
+            }
+
+            .user-pill {
+                padding: 5px 8px;
+            }
+
+            .username {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .listing-row {
+                padding: 14px;
+            }
+
+            .listing-price {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="logo"
+        >
+            Vault<span>GG</span>
+        </a>
+
+        <div class="nav-right">
+
+            <a
+                href="{{ url_for('marketplace.marketplace') }}"
+                class="nav-link"
+            >
+                Marketplace
+            </a>
+
+            <a
+                href="#"
+                class="nav-link"
+            >
+                Messages
+            </a>
+
+            <a
+                href="#"
+                class="nav-link"
+            >
+                Notifications
+            </a>
+
+            <div class="user-pill">
+
+                <div class="avatar">
+                    {{ user.username[0]|upper }}
+                </div>
+
+                <span class="username">
+                    {{ user.username }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="side-title">
+                Main
+            </div>
+
+            <a
+                href="{{ url_for('dashboard.dashboard') }}"
+                class="side-link active"
+            >
+                <span class="side-icon">⌂</span>
+                Dashboard
+            </a>
+
+            <a
+                href="{{ url_for('marketplace.marketplace') }}"
+                class="side-link"
+            >
+                <span class="side-icon">🛒</span>
+                Marketplace
+            </a>
+
+            <a
+                href="#"
+                class="side-link"
+            >
+                <span class="side-icon">📦</span>
+                My Orders
+            </a>
+
+            <a
+                href="{{ url_for('dashboard.favorites') }}"
+                class="side-link"
+            >
+                <span class="side-icon">❤️</span>
+                Favorites
+            </a>
+
+            <a
+                href="#"
+                class="side-link"
+            >
+                <span class="side-icon">💬</span>
+                Messages
+            </a>
+
+
+            <div class="side-title">
+                Selling
+            </div>
+
+            <a
+                href="{{ url_for('seller.dashboard') }}"
+                class="side-link"
+            >
+                <span class="side-icon">🏪</span>
+                Seller Center
+            </a>
+
+            <a
+                href="{{ url_for('seller.create_listing') }}"
+                class="side-link"
+            >
+                <span class="side-icon">＋</span>
+                Create Listing
+            </a>
+
+
+            <div class="side-title">
+                Account
+            </div>
+
+            <a
+                href="#"
+                class="side-link"
+            >
+                <span class="side-icon">⚙</span>
+                Settings
+            </a>
+
+            <form
+                action="{{ url_for('auth.logout') }}"
+                method="POST"
+                style="margin: 0;"
+            >
+                <button
+                    type="submit"
+                    class="side-link"
+                    style="
+                        width: 100%;
+                        border: none;
+                        background: transparent;
+                        cursor: pointer;
+                        text-align: left;
+                    "
+                >
+                    <span class="side-icon">↪</span>
+                        Logout
+                </button>
+            </form>
+
+        </aside>
+
+
+        <!-- MAIN -->
+
+        <main class="main">
+
+            {% with messages = get_flashed_messages(
+                with_categories=true
+            ) %}
+
+                {% if messages %}
+
+                    <div class="flash-container">
+
+                        {% for category, message in messages %}
+
+                            <div class="flash {{ category }}">
+                                {{ message }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            {% endwith %}
+
+
+            <!-- WELCOME -->
+
+            <section class="welcome">
+
+                <div>
+
+                    <h1>
+                        Welcome back,
+                        {{ user.username }} 👋
+                    </h1>
+
+                    <p>
+                        Manage your VaultGG account,
+                        purchases and listings.
+                    </p>
+
+                    {% if user.is_fully_verified() %}
+
+                        <div class="verified">
+                            ✓ Account Verified
+                        </div>
+
+                    {% else %}
+
+                        <div class="verified">
+                            ⚠ Verification Required
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('seller.create_listing') }}"
+                    class="create-btn"
+                >
+                    + Create Listing
+                </a>
+
+            </section>
+
+
+            <!-- STATS -->
+
+            <section class="stats">
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <span class="stat-label">
+                            My Orders
+                        </span>
+
+                        <span class="stat-icon">
+                            📦
+                        </span>
+
+                    </div>
+
+                    <div class="stat-value">
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <span class="stat-label">
+                            Favorites
+                        </span>
+
+                        <span class="stat-icon">
+                            ❤️
+                        </span>
+
+                    </div>
+
+                    <div class="stat-value">
+                         {{ favorites_count }}
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <span class="stat-label">
+                            Active Listings
+                        </span>
+
+                        <span class="stat-icon">
+                            🏪
+                        </span>
+
+                    </div>
+
+                    <div class="stat-value">
+                        {{ active_listings }}
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <span class="stat-label">
+                            Sold Listings
+                        </span>
+
+                        <span class="stat-icon">
+                            ✓
+                        </span>
+
+                    </div>
+
+                    <div class="stat-value">
+                        {{ sold_listings }}
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- CONTENT -->
+
+            <section class="content-grid">
+
+
+                <!-- LISTINGS -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h2>
+                            Your Listings
+                        </h2>
+
+                        <a
+                            href="{{ url_for('seller.dashboard') }}"
+                            class="view-all"
+                        >
+                            View all
+                        </a>
+
+                    </div>
+
+
+                    {% if listings %}
+
+                        {% for listing in listings[:5] %}
+
+                            <div class="listing-row">
+
+                                <div class="listing-icon">
+                                    🎮
+                                </div>
+
+
+                                <div class="listing-info">
+
+                                    <div class="listing-title">
+                                        {{ listing.title }}
+                                    </div>
+
+                                    <div class="listing-meta">
+                                        {{ listing.game.name }}
+                                    </div>
+
+                                </div>
+
+
+                                <div class="listing-price">
+                                    {{ listing.currency }}
+                                    {{ listing.price }}
+                                </div>
+
+
+                                {% if listing.status == "active" %}
+
+                                    <span class="status status-active">
+                                        Active
+                                    </span>
+
+                                {% elif listing.status == "sold" %}
+
+                                    <span class="status status-sold">
+                                        Sold
+                                    </span>
+
+                                {% elif listing.status == "draft" %}
+
+                                    <span class="status status-draft">
+                                        Draft
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status status-pending">
+                                        {{ listing.status }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <div class="empty">
+
+                            <div class="empty-icon">
+                                🎮
+                            </div>
+
+                            <h3>
+                                No listings yet
+                            </h3>
+
+                            <p>
+                                Start selling your first
+                                gaming account on VaultGG.
+                            </p>
+
+                            <a
+                                href="{{ url_for('seller.create_listing') }}"
+                                class="empty-btn"
+                            >
+                                Create Your First Listing
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- RIGHT COLUMN -->
+
+                <div>
+
+
+                    <!-- PROFILE -->
+
+                    <div
+                        class="panel"
+                        style="margin-bottom:20px;"
+                    >
+
+                        <div class="profile-card">
+
+                            <div class="profile-avatar">
+                                {{ user.username[0]|upper }}
+                            </div>
+
+                            <h3>
+                                {{ user.username }}
+                            </h3>
+
+                            <p>
+                                VaultGG Member
+                            </p>
+
+
+                            <div class="profile-status">
+
+                                {% if user.is_fully_verified() %}
+
+                                    <strong>
+                                        ✓ Verified Account
+                                    </strong>
+
+                                    <span>
+                                        Your account is verified
+                                        and ready to use.
+                                    </span>
+
+                                {% else %}
+
+                                    <strong>
+                                        ⚠ Verification Needed
+                                    </strong>
+
+                                    <span>
+                                        Complete verification
+                                        to use marketplace features.
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- QUICK ACTIONS -->
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <h2>
+                                Quick Actions
+                            </h2>
+
+                        </div>
+
+
+                        <div class="quick-actions">
+
+                            <a
+                                href="{{ url_for('marketplace.marketplace') }}"
+                                class="quick-action"
+                            >
+
+                                <div class="quick-icon">
+                                    🛒
+                                </div>
+
+                                <div class="quick-text">
+
+                                    <strong>
+                                        Browse Marketplace
+                                    </strong>
+
+                                    <span>
+                                        Find your next gaming account
+                                    </span>
+
+                                </div>
+
+                            </a>
+
+
+                            <a
+                                href="{{ url_for('seller.create_listing') }}"
+                                class="quick-action"
+                            >
+
+                                <div class="quick-icon">
+                                    ➕
+                                </div>
+
+                                <div class="quick-text">
+
+                                    <strong>
+                                        Sell an Account
+                                    </strong>
+
+                                    <span>
+                                        Create a new listing
+                                    </span>
+
+                                </div>
+
+                            </a>
+
+
+                            <a
+                                href="#"
+                                class="quick-action"
+                            >
+
+                                <div class="quick-icon">
+                                    💬
+                                </div>
+
+                                <div class="quick-text">
+
+                                    <strong>
+                                        Messages
+                                    </strong>
+
+                                    <span>
+                                        Chat with buyers and sellers
+                                    </span>
+
+                                </div>
+
+                            </a>
+
+
+                            <a
+                                href="#"
+                                class="quick-action"
+                            >
+
+                                <div class="quick-icon">
+                                    ⚙
+                                </div>
+
+                                <div class="quick-text">
+
+                                    <strong>
+                                        Account Settings
+                                    </strong>
+
+                                    <span>
+                                        Manage your profile
+                                    </span>
+
+                                </div>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

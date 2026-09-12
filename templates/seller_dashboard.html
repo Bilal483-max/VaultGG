@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Seller Dashboard - VaultGG</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #07090f;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            height: 72px;
+            padding: 0 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(7, 9, 15, 0.95);
+            border-bottom: 1px solid #202532;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .logo span {
+            color: #7c5cff;
+        }
+
+        .nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav a {
+            color: #aab1c0;
+            text-decoration: none;
+        }
+
+        .nav a:hover {
+            color: #ffffff;
+        }
+
+        .container {
+            width: min(1200px, 90%);
+            margin: auto;
+        }
+
+        .header {
+            padding: 55px 0 35px;
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 25px;
+        }
+
+        .eyebrow {
+            color: #8c75ff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: clamp(34px, 5vw, 52px);
+            margin-bottom: 10px;
+        }
+
+        .welcome {
+            color: #8e96a8;
+            font-size: 16px;
+        }
+
+        .create-btn {
+            padding: 14px 21px;
+            border-radius: 12px;
+            background: #7c5cff;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .create-btn:hover {
+            background: #6d4ee8;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat {
+            padding: 23px;
+            border: 1px solid #222836;
+            border-radius: 16px;
+            background: linear-gradient(
+                145deg,
+                #111520,
+                #0c0f16
+            );
+        }
+
+        .stat-label {
+            color: #777f91;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .section {
+            margin-bottom: 70px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .section-header h2 {
+            font-size: 22px;
+        }
+
+        .section-header span {
+            color: #70798c;
+            font-size: 13px;
+        }
+
+        .empty {
+            padding: 65px 25px;
+            border: 1px dashed #2a3040;
+            border-radius: 18px;
+            text-align: center;
+            background: #0b0e15;
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .empty h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .empty p {
+            color: #80899b;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto 22px;
+        }
+
+        .empty-btn {
+            display: inline-block;
+            padding: 12px 19px;
+            border-radius: 10px;
+            background: #171c28;
+            border: 1px solid #2b3140;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .tips {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .tip {
+            padding: 22px;
+            border: 1px solid #202632;
+            border-radius: 15px;
+            background: #0c1017;
+        }
+
+        .tip-icon {
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .tip h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .tip p {
+            color: #858e9f;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        footer {
+            padding: 30px 0;
+            border-top: 1px solid #202532;
+            color: #687183;
+            font-size: 13px;
+        }
+
+        @media (max-width: 850px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tips {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+        }
+
+        @media (max-width: 550px) {
+
+            .nav {
+                display: none;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 35px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        Vault<span>GG</span>
+    </div>
+
+    <div class="nav">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/marketplace/">
+            Marketplace
+        </a>
+
+        <a href="/auth/login">
+            Account
+        </a>
+
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+
+    <header class="header">
+
+        <div>
+
+            <div class="eyebrow">
+                Seller Center
+            </div>
+
+            <h1>
+                Seller Dashboard
+            </h1>
+
+            <p class="welcome">
+                Welcome back, {{ user.username }}.
+            </p>
+
+        </div>
+
+
+        <a
+    		href="{{ url_for('seller.create_listing') }}"
+    		class="create-btn"
+	>
+    		+ Create Listing
+	</a>
+    </header>
+
+
+    <section class="stats">
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Active Listings
+            </div>
+
+            <div class="stat-value">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Successful Sales
+            </div>
+
+            <div class="stat-value">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Total Sold
+            </div>
+
+            <div class="stat-value">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Seller Rank
+            </div>
+
+            <div class="stat-value">
+                New Seller
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2>
+                Your Listings
+            </h2>
+
+            <span>
+                Manage your gaming accounts
+            </span>
+
+        </div>
+
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                🎮
+            </div>
+
+            <h2>
+                You don't have any listings yet
+            </h2>
+
+            <p>
+                Create your first gaming account listing.
+                It will go through VaultGG verification
+                before becoming visible in the marketplace.
+            </p>
+
+            <a
+    		href="{{ url_for('seller.create_listing') }}"
+    		class="empty-btn"
+	    >
+    		Create Your First Listing
+	    </a>
+        </div>
+
+    </section>
+
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2>
+                Seller Tips
+            </h2>
+
+            <span>
+                Build buyer confidence
+            </span>
+
+        </div>
+
+
+        <div class="tips">
+
+
+            <div class="tip">
+
+                <div class="tip-icon">
+                    🛡️
+                </div>
+
+                <h3>
+                    Provide accurate information
+                </h3>
+
+                <p>
+                    Give buyers clear and truthful
+                    information about the account.
+                </p>
+
+            </div>
+
+
+            <div class="tip">
+
+                <div class="tip-icon">
+                    📸
+                </div>
+
+                <h3>
+                    Add useful evidence
+                </h3>
+
+                <p>
+                    Good screenshots and supporting
+                    evidence can make verification easier.
+                </p>
+
+            </div>
+
+
+            <div class="tip">
+
+                <div class="tip-icon">
+                    ⚡
+                </div>
+
+                <h3>
+                    Respond quickly
+                </h3>
+
+                <p>
+                    Fast communication helps create
+                    a better buyer experience.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<footer>
+
+    <div class="container">
+
+        VaultGG Seller Center
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>

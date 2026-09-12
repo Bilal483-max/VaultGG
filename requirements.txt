@@ -5,6 +5,7 @@ bidict==0.24.1
 blinker==1.9.0
 cffi==2.1.1
 click==8.5.0
+cryptography>=46.0.0
 dnspython==2.8.0
 eventlet==0.41.2
 Flask==3.1.3
@@ -29,5 +30,4 @@ typing_extensions==4.16.0
 tzdata==2026.3
 Werkzeug==3.1.8
 wsproto==1.3.2
-gunicorn.txtecho cryptography
-cryptography
+gunicorn

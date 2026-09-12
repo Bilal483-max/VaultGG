@@ -20,25 +20,69 @@ def create_app():
         static_folder="../static"
     )
 
+    # ==========================
+    # BASIC CONFIGURATION
+    # ==========================
+
     app.config["SECRET_KEY"] = os.getenv(
         "SECRET_KEY",
         "development-secret-key"
     )
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
-        "DATABASE_URL"
-    )
+    # ==========================
+    # DATABASE CONFIGURATION
+    # ==========================
 
+    database_url = os.getenv("DATABASE_URL")
+
+    if not database_url:
+        raise RuntimeError(
+            "DATABASE_URL is not set in the environment variables."
+        )
+
+    # Render/PostgreSQL may provide:
+    # postgresql://...
+    # postgres://...
+    #
+    # SQLAlchemy needs the psycopg3 driver explicitly:
+    # postgresql+psycopg://...
+
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace(
+            "postgres://",
+            "postgresql+psycopg://",
+            1
+        )
+    elif database_url.startswith("postgresql://"):
+        database_url = database_url.replace(
+            "postgresql://",
+            "postgresql+psycopg://",
+            1
+        )
+    elif database_url.startswith("postgresql+psycopg2://"):
+        database_url = database_url.replace(
+            "postgresql+psycopg2://",
+            "postgresql+psycopg://",
+            1
+        )
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    # ==========================
+    # SESSION SECURITY
+    # ==========================
 
     app.config["SESSION_COOKIE_HTTPONLY"] = True
     app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
+    # Keep HTTP working locally.
+    # Render can later be configured to use secure cookies.
     app.config["SESSION_COOKIE_SECURE"] = False
 
-    if not app.config["SQLALCHEMY_DATABASE_URI"]:
-        raise RuntimeError(
-            "DATABASE_URL is not set in the .env file."
-        )
+    # ==========================
+    # INITIALIZE DATABASE
+    # ==========================
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -69,8 +113,11 @@ def create_app():
         UserRole
     )
 
-    from app.models.review import SellerReview  
-    _ = (   
+    from app.models.review import SellerReview
+
+    # Keep model imports active so SQLAlchemy/Alembic
+    # can discover all registered models.
+    _ = (
         User,
         Game,
         GameAttribute,
@@ -82,7 +129,8 @@ def create_app():
         Role,
         Permission,
         RolePermission,
-        UserRole
+        UserRole,
+        SellerReview
     )
 
     # ==========================
@@ -134,3 +182,4 @@ def create_app():
         return render_template("home.html")
 
     return app
+

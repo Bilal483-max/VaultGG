@@ -685,6 +685,158 @@
             color: var(--danger);
         }
 
+        /* ACCOUNT DROPDOWN */
+
+        .account-menu {
+            position: relative;
+        }
+
+        .user-pill {
+            cursor: pointer;
+            user-select: none;
+            transition: 0.2s;
+        }
+
+        .user-pill:hover,
+        .account-menu.open .user-pill {
+            background: rgba(124,92,255,0.10);
+            border-color: rgba(124,92,255,0.28);
+        }
+
+        .user-chevron {
+            font-size: 11px;
+            color: var(--muted);
+            transition: transform 0.2s;
+            margin-left: 2px;
+        }
+
+        .account-menu.open .user-chevron {
+            transform: rotate(180deg);
+        }
+
+        .account-dropdown {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            width: 245px;
+            padding: 8px;
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 15px;
+            background: rgba(13,17,26,0.97);
+            box-shadow:
+                0 20px 50px rgba(0,0,0,0.45),
+                0 0 35px rgba(124,92,255,0.08);
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px) scale(0.98);
+            transform-origin: top right;
+            transition: 0.18s ease;
+            z-index: 300;
+        }
+
+        .account-menu.open .account-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .dropdown-user {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 11px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dropdown-avatar {
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+        .dropdown-user-info {
+            min-width: 0;
+        }
+
+        .dropdown-user-info strong {
+            display: block;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-user-info span {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        .dropdown-link {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 9px;
+            color: #dce1ea;
+            font-size: 12px;
+            transition: 0.18s;
+        }
+
+        .dropdown-link:hover {
+            background: rgba(124,92,255,0.10);
+            color: white;
+        }
+
+        .dropdown-icon {
+            width: 24px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 6px 4px;
+        }
+
+        .dropdown-logout {
+            width: 100%;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            text-align: left;
+            color: #ff7089;
+        }
+
+        .dropdown-logout:hover {
+            background: rgba(255,85,116,0.08);
+            color: #ff8ca0;
+        }
+
+        @media (max-width: 760px) {
+            .account-dropdown {
+                width: 225px;
+                right: -4px;
+            }
+
+            .user-pill {
+                padding: 5px 8px;
+            }
+        }
+
         /* MOBILE */
 
         .mobile-menu {
@@ -818,15 +970,102 @@
                 Notifications
             </a>
 
-            <div class="user-pill">
+            <div class="account-menu" id="accountMenu">
 
-                <div class="avatar">
-                    {{ user.username[0]|upper }}
+                <button
+                    type="button"
+                    class="user-pill"
+                    id="accountToggle"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    style="
+                        border: 1px solid var(--border);
+                        color: var(--text);
+                        font-size: inherit;
+                    "
+                >
+
+                    <div class="avatar">
+                        {{ user.username[0]|upper }}
+                    </div>
+
+                    <span class="username">
+                        {{ user.username }}
+                    </span>
+
+                    <span class="user-chevron">▼</span>
+
+                </button>
+
+                <div class="account-dropdown" id="accountDropdown">
+
+                    <div class="dropdown-user">
+
+                        <div class="dropdown-avatar">
+                            {{ user.username[0]|upper }}
+                        </div>
+
+                        <div class="dropdown-user-info">
+                            <strong>{{ user.username }}</strong>
+
+                            {% if user.is_fully_verified() %}
+                                <span>✓ Verified account</span>
+                            {% else %}
+                                <span>⚠ Verification required</span>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <a
+                        href="{{ url_for('seller.seller_profile', seller_id=user.id) }}"
+                        class="dropdown-link"
+                    >
+                        <span class="dropdown-icon">👤</span>
+                        Profile
+                    </a>
+
+                    <a
+                        href="{{ url_for('dashboard.dashboard') }}"
+                        class="dropdown-link"
+                    >
+                        <span class="dropdown-icon">⌂</span>
+                        Dashboard
+                    </a>
+
+                    <a
+                        href="{{ url_for('dashboard.favorites') }}"
+                        class="dropdown-link"
+                    >
+                        <span class="dropdown-icon">❤️</span>
+                        Favorites
+                    </a>
+
+                    <a
+                        href="#"
+                        class="dropdown-link"
+                    >
+                        <span class="dropdown-icon">⚙</span>
+                        Account Settings
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <form
+                        action="{{ url_for('auth.logout') }}"
+                        method="POST"
+                        style="margin: 0;"
+                    >
+                        <button
+                            type="submit"
+                            class="dropdown-link dropdown-logout"
+                        >
+                            <span class="dropdown-icon">↪</span>
+                            Logout
+                        </button>
+                    </form>
+
                 </div>
-
-                <span class="username">
-                    {{ user.username }}
-                </span>
 
             </div>
 
@@ -1400,6 +1639,43 @@
         </main>
 
     </div>
+
+
+    <script>
+        (function () {
+            const accountMenu = document.getElementById("accountMenu");
+            const accountToggle = document.getElementById("accountToggle");
+
+            if (!accountMenu || !accountToggle) {
+                return;
+            }
+
+            accountToggle.addEventListener("click", function (event) {
+                event.stopPropagation();
+
+                const isOpen = accountMenu.classList.toggle("open");
+                accountToggle.setAttribute(
+                    "aria-expanded",
+                    isOpen ? "true" : "false"
+                );
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!accountMenu.contains(event.target)) {
+                    accountMenu.classList.remove("open");
+                    accountToggle.setAttribute("aria-expanded", "false");
+                }
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape") {
+                    accountMenu.classList.remove("open");
+                    accountToggle.setAttribute("aria-expanded", "false");
+                    accountToggle.focus();
+                }
+            });
+        })();
+    </script>
 
 </body>
 </html>

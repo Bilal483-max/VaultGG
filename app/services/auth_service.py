@@ -47,7 +47,6 @@ def normalize_phone(phone_number):
 
     phone_number = phone_number.strip()
 
-    # Remove spaces, brackets and hyphens.
     phone_number = (
         phone_number
         .replace(" ", "")
@@ -56,7 +55,7 @@ def normalize_phone(phone_number):
         .replace(")", "")
     )
 
-    # Convert Nigerian local format:
+    # Nigerian local format:
     # 08012345678 -> +2348012345678
     if phone_number.startswith("0"):
         phone_number = "+234" + phone_number[1:]
@@ -193,6 +192,11 @@ def can_resend_otp(last_sent_at):
     if last_sent_at is None:
         return True
 
+    if last_sent_at.tzinfo is None:
+        last_sent_at = last_sent_at.replace(
+            tzinfo=timezone.utc
+        )
+
     elapsed = (
         now_utc() - last_sent_at
     ).total_seconds()
@@ -203,6 +207,11 @@ def can_resend_otp(last_sent_at):
 def seconds_until_resend(last_sent_at):
     if last_sent_at is None:
         return 0
+
+    if last_sent_at.tzinfo is None:
+        last_sent_at = last_sent_at.replace(
+            tzinfo=timezone.utc
+        )
 
     elapsed = (
         now_utc() - last_sent_at
@@ -219,9 +228,6 @@ def seconds_until_resend(last_sent_at):
 def create_email_otp(user):
     """
     Generate and securely store a new email OTP.
-
-    The plaintext OTP is returned only so the email
-    service can send it. It is never stored in the database.
     """
 
     otp = generate_otp()
@@ -242,9 +248,6 @@ def create_email_otp(user):
 def create_phone_otp(user):
     """
     Generate and securely store a new phone OTP.
-
-    The plaintext OTP is returned only so the SMS
-    service can send it. It is never stored in the database.
     """
 
     otp = generate_otp()
@@ -262,56 +265,62 @@ def create_phone_otp(user):
     return otp
 
 
+# ==========================================
+# VERIFY EMAIL OTP
+# ==========================================
+
 def verify_email_otp(user, otp):
     """
-    Verify an email OTP.
+    Returns True when verification succeeds.
 
-    Returns:
-        (True, None)
-        or
-        (False, error_message)
+    Raises ValueError when verification fails.
     """
 
     if user.email_verified:
-        return True, None
+        return True
 
     if not user.email_otp_hash:
-        return False, "No email verification code is active."
+        raise ValueError(
+            "No email verification code is active."
+        )
 
     if not user.email_otp_expires_at:
-        return False, "Your verification code has expired."
+        raise ValueError(
+            "Your verification code has expired."
+        )
 
     if user.email_otp_attempts >= OTP_MAX_ATTEMPTS:
-        return (
-            False,
+        raise ValueError(
             "Too many incorrect attempts. "
             "Please request a new verification code."
         )
 
-    if now_utc() > user.email_otp_expires_at:
+    expires_at = user.email_otp_expires_at
+
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(
+            tzinfo=timezone.utc
+        )
+
+    if now_utc() > expires_at:
         user.email_otp_hash = None
         user.email_otp_expires_at = None
 
         db.session.commit()
 
-        return (
-            False,
+        raise ValueError(
             "Your verification code has expired. "
             "Please request a new one."
         )
 
-    otp = otp.strip()
+    otp = (otp or "").strip()
 
-    if (
-        len(otp) != 6
-        or not otp.isdigit()
-    ):
+    if len(otp) != 6 or not otp.isdigit():
         user.email_otp_attempts += 1
 
         db.session.commit()
 
-        return (
-            False,
+        raise ValueError(
             "Enter the 6-digit verification code."
         )
 
@@ -327,14 +336,12 @@ def verify_email_otp(user, otp):
         )
 
         if remaining == 0:
-            return (
-                False,
+            raise ValueError(
                 "Too many incorrect attempts. "
                 "Please request a new verification code."
             )
 
-        return (
-            False,
+        raise ValueError(
             f"Incorrect verification code. "
             f"{remaining} attempt(s) remaining."
         )
@@ -347,65 +354,69 @@ def verify_email_otp(user, otp):
     user.email_otp_attempts = 0
     user.email_otp_last_sent_at = None
 
-    # Activate account if at least one verification method
-    # has been successfully verified.
     user.account_status = ACCOUNT_ACTIVE
 
     db.session.commit()
 
-    return True, None
+    return True
 
+
+# ==========================================
+# VERIFY PHONE OTP
+# ==========================================
 
 def verify_phone_otp(user, otp):
     """
-    Verify a phone OTP.
+    Returns True when verification succeeds.
 
-    Returns:
-        (True, None)
-        or
-        (False, error_message)
+    Raises ValueError when verification fails.
     """
 
     if user.phone_verified:
-        return True, None
+        return True
 
     if not user.phone_otp_hash:
-        return False, "No phone verification code is active."
+        raise ValueError(
+            "No phone verification code is active."
+        )
 
     if not user.phone_otp_expires_at:
-        return False, "Your verification code has expired."
+        raise ValueError(
+            "Your verification code has expired."
+        )
 
     if user.phone_otp_attempts >= OTP_MAX_ATTEMPTS:
-        return (
-            False,
+        raise ValueError(
             "Too many incorrect attempts. "
             "Please request a new verification code."
         )
 
-    if now_utc() > user.phone_otp_expires_at:
+    expires_at = user.phone_otp_expires_at
+
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(
+            tzinfo=timezone.utc
+        )
+
+    if now_utc() > expires_at:
         user.phone_otp_hash = None
         user.phone_otp_expires_at = None
 
         db.session.commit()
 
-        return (
-            False,
+        raise ValueError(
             "Your verification code has expired. "
             "Please request a new one."
         )
 
-    otp = otp.strip()
+    otp = (otp or "").strip()
 
-    if (
-        len(otp) != 6
-        or not otp.isdigit()
-    ):
+    if len(otp) != 6 or not otp.isdigit():
         user.phone_otp_attempts += 1
 
         db.session.commit()
 
-        return (
-            False,
+        raise ValueError(
             "Enter the 6-digit verification code."
         )
 
@@ -421,14 +432,12 @@ def verify_phone_otp(user, otp):
         )
 
         if remaining == 0:
-            return (
-                False,
+            raise ValueError(
                 "Too many incorrect attempts. "
                 "Please request a new verification code."
             )
 
-        return (
-            False,
+        raise ValueError(
             f"Incorrect verification code. "
             f"{remaining} attempt(s) remaining."
         )
@@ -441,13 +450,11 @@ def verify_phone_otp(user, otp):
     user.phone_otp_attempts = 0
     user.phone_otp_last_sent_at = None
 
-    # Activate account if at least one verification method
-    # has been successfully verified.
     user.account_status = ACCOUNT_ACTIVE
 
     db.session.commit()
 
-    return True, None
+    return True
 
 
 # ==========================================
@@ -478,7 +485,7 @@ def register_user(
     valid, error = validate_username(username)
 
     if not valid:
-        return None, error
+        raise ValueError(error)
 
     # ------------------------------------------
     # Validate password
@@ -487,7 +494,7 @@ def register_user(
     valid, error = validate_password(password)
 
     if not valid:
-        return None, error
+        raise ValueError(error)
 
     # ------------------------------------------
     # Validate verification method
@@ -497,8 +504,7 @@ def register_user(
         "email",
         "phone"
     ):
-        return (
-            None,
+        raise ValueError(
             "Invalid verification method."
         )
 
@@ -511,14 +517,14 @@ def register_user(
         valid, error = validate_email(email)
 
         if not valid:
-            return None, error
+            raise ValueError(error)
 
-    elif verification_method == "phone":
+    else:
 
         valid, error = validate_phone(phone_number)
 
         if not valid:
-            return None, error
+            raise ValueError(error)
 
     # ------------------------------------------
     # Check username
@@ -529,8 +535,7 @@ def register_user(
     ).first()
 
     if existing_username:
-        return (
-            None,
+        raise ValueError(
             "That username is already taken."
         )
 
@@ -545,8 +550,7 @@ def register_user(
         ).first()
 
         if existing_email:
-            return (
-                None,
+            raise ValueError(
                 "An account with that email already exists."
             )
 
@@ -561,8 +565,7 @@ def register_user(
         ).first()
 
         if existing_phone:
-            return (
-                None,
+            raise ValueError(
                 "An account with that phone number already exists."
             )
 
@@ -583,44 +586,49 @@ def register_user(
         failed_login_attempts=0
     )
 
-    db.session.add(user)
+    try:
+        db.session.add(user)
 
-    db.session.flush()
+        db.session.flush()
 
-    # ------------------------------------------
-    # Assign Buyer role
-    # ------------------------------------------
+        # --------------------------------------
+        # Assign Buyer role
+        # --------------------------------------
 
-    buyer_role = Role.query.filter_by(
-        name="Buyer"
-    ).first()
+        buyer_role = Role.query.filter_by(
+            name="Buyer"
+        ).first()
 
-    if buyer_role is None:
+        if buyer_role is None:
+            db.session.rollback()
 
+            raise ValueError(
+                "Buyer role is missing. "
+                "Run seed_roles.py first."
+            )
+
+        user.roles.append(buyer_role)
+
+        # --------------------------------------
+        # Generate OTP
+        # --------------------------------------
+
+        if verification_method == "email":
+            otp = create_email_otp(user)
+        else:
+            otp = create_phone_otp(user)
+
+        db.session.commit()
+
+        return user, otp
+
+    except ValueError:
         db.session.rollback()
+        raise
 
-        return (
-            None,
-            "Buyer role is missing. Run seed_roles.py first."
-        )
-
-    user.roles.append(buyer_role)
-
-    # ------------------------------------------
-    # Generate selected OTP
-    # ------------------------------------------
-
-    otp = None
-
-    if verification_method == "email":
-        otp = create_email_otp(user)
-
-    elif verification_method == "phone":
-        otp = create_phone_otp(user)
-
-    db.session.commit()
-
-    return user, otp
+    except Exception:
+        db.session.rollback()
+        raise
 
 
 # ==========================================
@@ -630,14 +638,12 @@ def register_user(
 def resend_email_otp(user):
 
     if user.email_verified:
-        return (
-            None,
+        raise ValueError(
             "Your email is already verified."
         )
 
     if not user.email:
-        return (
-            None,
+        raise ValueError(
             "No email address is connected to this account."
         )
 
@@ -648,16 +654,16 @@ def resend_email_otp(user):
             user.email_otp_last_sent_at
         )
 
-        return (
-            None,
-            f"Please wait {seconds} second(s) before requesting another code."
+        raise ValueError(
+            f"Please wait {seconds} second(s) "
+            f"before requesting another code."
         )
 
     otp = create_email_otp(user)
 
     db.session.commit()
 
-    return otp, None
+    return otp
 
 
 # ==========================================
@@ -667,14 +673,12 @@ def resend_email_otp(user):
 def resend_phone_otp(user):
 
     if user.phone_verified:
-        return (
-            None,
+        raise ValueError(
             "Your phone number is already verified."
         )
 
     if not user.phone_number:
-        return (
-            None,
+        raise ValueError(
             "No phone number is connected to this account."
         )
 
@@ -685,16 +689,16 @@ def resend_phone_otp(user):
             user.phone_otp_last_sent_at
         )
 
-        return (
-            None,
-            f"Please wait {seconds} second(s) before requesting another code."
+        raise ValueError(
+            f"Please wait {seconds} second(s) "
+            f"before requesting another code."
         )
 
     otp = create_phone_otp(user)
 
     db.session.commit()
 
-    return otp, None
+    return otp
 
 
 # ==========================================
@@ -725,7 +729,14 @@ def verify_password_reset_token(user, token):
     if not user.password_reset_expires_at:
         return False
 
-    if now_utc() > user.password_reset_expires_at:
+    expires_at = user.password_reset_expires_at
+
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(
+            tzinfo=timezone.utc
+        )
+
+    if now_utc() > expires_at:
         return False
 
     return (
@@ -805,7 +816,7 @@ def authenticate_user(
     password
 ):
 
-    identifier = identifier.strip()
+    identifier = (identifier or "").strip()
 
     user = User.query.filter(
         or_(
